@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>توليد وصف الصورة</title>
+</head>
+<body>
+    <h1>رفع صورة لتوليد الوصف</h1>
+    <form action="/generate_caption" method="POST" enctype="multipart/form-data">
+        <label for="image">اختر صورة:</label>
+        <input type="file" name="image" id="image" accept="image/*" required>
+        <button type="submit">رفع الصورة</button>
+    </form>
+
+    <h2>الوصف المولد:</h2>
+    <p id="caption"></p>
+
+    <script>
+        // الكود التالي سيعالج الرد من الخادم عند إرسال الصورة
+        const form = document.querySelector('form');
+        form.onsubmit = async (event) => {
+            event.preventDefault();
+            
+            const formData = new FormData(form);
+            const response = await fetch('/generate_caption', {
+                method: 'POST',
+                body: formData,
+            });
+            const result = await response.json();
+            
+            if (result.caption) {
+                document.getElementById('caption').innerText = result.caption;
+            } else {
+                document.getElementById('caption').innerText = "لم يتم توليد الوصف.";
+            }
+        };
+    </script>
+</body>
+</html>
