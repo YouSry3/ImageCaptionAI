@@ -1,63 +1,56 @@
-from flask import Flask, request, jsonify, render_template, send_from_directory
-from transformers import BlipProcessor, BlipForConditionalGeneration
-from PIL import Image
-from googletrans import Translator
+from flask import Flask, render_template, request, redirect, url_for, flash, send_from_directory
+from werkzeug.utils import secure_filename
 import os
-import torch
+from caption_generator import generate_captions
 
 app = Flask(__name__)
+app.secret_key = 'your-secret-key-here'
 
-# تحميل المعالج والنموذج
-processor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
-model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base")
-
-# تهيئة مترجم Google
-translator = Translator()
-
-# مسار حفظ الصور المرفوعة
-UPLOAD_FOLDER = 'uploads'
-if not os.path.exists(UPLOAD_FOLDER):
-    os.makedirs(UPLOAD_FOLDER)
-
+# إعدادات التحميل
+UPLOAD_FOLDER = 'static/uploads'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB
 
-# إعداد Flask لتقديم الصور من المجلد
+# تأكد من وجود مجلد التحميلات
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.route('/', methods=['GET', 'POST'])
+def upload_file():
+    if request.method == 'POST':
+        if 'image' not in request.files:
+            flash('No file selected')
+            return redirect(request.url)
+        
+        file = request.files['image']
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+        
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(filepath)
+            
+            try:
+                caption_en, caption_ar = generate_captions(filepath)
+                return render_template('index.html', 
+                                   image_url=filename,
+                                   caption_en=caption_en,
+                                   caption_ar=caption_ar)
+            except Exception as e:
+                print(f"Error generating captions: {str(e)}")
+                flash('Error generating descriptions')
+                return redirect(request.url)
+    
+    return render_template('index.html')
+
 @app.route('/uploads/<filename>')
-def uploaded_file(filename):
+def serve_image(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
-@app.route('/')
-def home():
-    return render_template('index.html')  # عرض صفحة HTML
-
-@app.route("/generate_caption", methods=["POST"])
-def generate_caption():
-    # التأكد من أن الصورة تم إرسالها في الطلب
-    if 'image' not in request.files:
-        return jsonify({"error": "No image found in request"}), 400
-
-    # قراءة الصورة
-    image_file = request.files['image']
-    image = Image.open(image_file)
-
-    # حفظ الصورة في مجلد uploads
-    image_filename = os.path.join(app.config['UPLOAD_FOLDER'], image_file.filename)
-    image.save(image_filename)
-
-    # توليد التسمية (caption) باستخدام BLIP
-    inputs = processor(images=image, return_tensors="pt")
-    out = model.generate(**inputs)
-    caption_en = processor.decode(out[0], skip_special_tokens=True)  # التسمية بالإنجليزية
-
-    # التحقق من إذا كان الوصف تم إنشاؤه بنجاح
-    if not caption_en:
-        caption_en = "No caption generated"
-
-    # ترجمة التسمية إلى العربية
-    caption_ar = translator.translate(caption_en, src='en', dest='ar').text  # الترجمة للعربية
-
-    # إعادة التوجيه إلى الصفحة الرئيسية مع عرض الوصف باللغتين والصورة
-    return render_template('index.html', caption_en=caption_en, caption_ar=caption_ar, image_filename=image_file.filename)
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run(debug=True)

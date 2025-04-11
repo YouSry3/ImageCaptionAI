@@ -1,5 +1,8 @@
-flask==3.0.0
-torch==2.6.0
-transformers==4.40.0
-Pillow==9.5.0
-werkzeug==3.0.2
+
+flask>=2.0.0
+torch>=1.10.0
+transformers>=4.18.0
+pillow>=9.0.0
+requests>=2.26.0
+sentencepiece>=0.1.99
+protobuf>=3.20.0
