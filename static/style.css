@@ -1,82 +1,175 @@
-/* إعدادات التنسيق العامة */
+/* ملف style.css */
+:root {
+  --primary-color: #10a37f;
+  --primary-dark: #0d8a6a;
+  --bg-color: #f7f7f8;
+  --chat-bg: #ffffff;
+  --user-message: #f7f7f8;
+  --ai-message: #ffffff;
+  --text-color: #343541;
+  --border-color: #e5e5e6;
+}
+
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-color);
   margin: 0;
   padding: 0;
+  color: var(--text-color);
+  line-height: 1.6;
 }
 
-.container {
-  width: 80%;
-  margin: 20px auto;
-  background-color: #fff;
-  padding: 20px;
+.app-container {
+  max-width: 900px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  text-align: center;
+  padding: 20px 0;
+  background-color: var(--chat-bg);
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 20px;
+}
+
+.app-header h1 {
+  margin: 0;
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.app-header p {
+  margin: 5px 0 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.chat-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--chat-bg);
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
 }
 
-.chat-box {
-  margin-bottom: 30px;
+.message-list {
+  padding: 20px;
+  flex: 1;
 }
 
 .message {
-  padding: 10px;
-  margin-bottom: 15px;
-  border-radius: 5px;
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.message-content {
+  max-width: 85%;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+.ai-message .message-content {
+  background-color: var(--ai-message);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+.ai-message .message-content strong {
+  color: var(--primary-color);
+  display: block;
+  margin-bottom: 5px;
+}
+
+.input-area {
+  padding: 15px;
+  background-color: var(--chat-bg);
+  border-top: 1px solid var(--border-color);
+}
+
+.upload-form {
+  width: 100%;
+}
+
+.file-upload-wrapper {
+  display: flex;
+  gap: 10px;
+}
+
+.file-upload-label {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  background-color: var(--user-message);
+  border: 1px dashed var(--border-color);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.file-upload-label:hover {
   background-color: #f0f0f0;
 }
 
-.message p {
-  font-size: 16px;
-  color: #333;
+.file-upload-label span {
+  color: #555;
 }
 
-.message.en {
-  background-color: #d1f7d1;
+.file-upload-label input[type="file"] {
+  display: none;
 }
 
-.message.ar {
-  background-color: #f7d1d1;
-}
-
-.uploaded-image {
-  margin-top: 20px;
-}
-
-.uploaded-image img {
-  max-width: 100%;
-  height: auto;
-}
-
-.form-container {
-  margin-top: 20px;
-}
-
-.form-container h3 {
-  margin-bottom: 10px;
-}
-
-.form-container label {
-  font-size: 16px;
-}
-
-.form-container input[type="file"] {
-  margin-top: 10px;
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.form-container button {
-  margin-top: 10px;
-  padding: 10px 20px;
-  border: none;
-  background-color: #4CAF50;
+.submit-button {
+  background-color: var(--primary-color);
   color: white;
-  border-radius: 4px;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
   cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s;
 }
 
-.form-container button:hover {
-  background-color: #45a049;
+.submit-button:hover {
+  background-color: var(--primary-dark);
+}
+
+.uploaded-image-preview {
+  margin-top: 30px;
+  text-align: center;
+  background-color: var(--chat-bg);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.uploaded-image-preview h3 {
+  margin-top: 0;
+  color: var(--primary-color);
+}
+
+.uploaded-image-preview img {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: 4px;
+  margin-top: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* تصميم متجاوب */
+@media (max-width: 768px) {
+  .file-upload-wrapper {
+      flex-direction: column;
+  }
+  
+  .message-content {
+      max-width: 90%;
+  }
 }

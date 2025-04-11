@@ -3,43 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Caption Generator</title>
+    <title>AI Image Caption Generator</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- خطوط جوجل -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <div class="chat-box">
-            <!-- عرض الوصف بالإنجليزية -->
-            {% if caption_en %}
-                <div class="message en">
-                    <p><strong>English Caption:</strong></p>
-                    <p>{{ caption_en }}</p>
-                </div>
-            {% endif %}
+    <div class="app-container">
+        <!-- Header يشبه ChatGPT -->
+        <header class="app-header">
+            <h1>Image Caption Generator</h1>
+            <p>Upload an image and get AI-generated captions in English & Arabic</p>
+        </header>
 
-            <!-- عرض الوصف بالعربية -->
-            {% if caption_ar %}
-                <div class="message ar">
-                    <p><strong>Arabic Caption:</strong></p>
-                    <p>{{ caption_ar }}</p>
+        <!-- صندوق المحادثة -->
+        <div class="chat-container">
+            <!-- الرسائل ستظهر هنا -->
+            <div class="message-list">
+                {% if caption_en %}
+                <div class="message ai-message">
+                    <div class="message-content">
+                        <strong>English Caption:</strong>
+                        <p>{{ caption_en }}</p>
+                    </div>
                 </div>
-            {% endif %}
+                {% endif %}
+
+                {% if caption_ar %}
+                <div class="message ai-message">
+                    <div class="message-content">
+                        <strong>Arabic Caption:</strong>
+                        <p dir="rtl">{{ caption_ar }}</p>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- نموذج رفع الصورة -->
+            <div class="input-area">
+                <form action="/generate_caption" method="POST" enctype="multipart/form-data" class="upload-form">
+                    <div class="file-upload-wrapper">
+                        <label for="image" class="file-upload-label">
+                            <span>Choose Image</span>
+                            <input type="file" name="image" id="image" required>
+                        </label>
+                        <button type="submit" class="submit-button">Generate Caption</button>
+                    </div>
+                </form>
+            </div>
         </div>
 
-        <div class="form-container">
-            <h3>Upload an Image to Generate Captions</h3>
-            <form action="/generate_caption" method="POST" enctype="multipart/form-data">
-                <label for="image">Choose an image:</label>
-                <input type="file" name="image" id="image" required>
-                <button type="submit">Generate Caption</button>
-            </form>
-        </div>
-
-        <!-- عرض الصورة المرفوعة -->
+        <!-- عرض الصورة بعد التحميل -->
         {% if image_filename %}
-        <div class="uploaded-image">
-            <h4>Uploaded Image:</h4>
-            <img src="{{ url_for('uploaded_file', filename=image_filename) }}" alt="Uploaded Image" style="max-width: 100%; height: auto;">
+        <div class="uploaded-image-preview">
+            <h3>Uploaded Image</h3>
+            <img src="{{ url_for('uploaded_file', filename=image_filename) }}" alt="Uploaded Image">
         </div>
         {% endif %}
     </div>
