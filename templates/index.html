@@ -33,17 +33,20 @@
             <div class="results-section">
                 {% if image_url %}
                 <div class="image-preview">
+                    <h3>Uploaded Image:</h3>
                     <img src="{{ url_for('serve_image', filename=image_url) }}" alt="Uploaded image">
                 </div>
                 {% endif %}
 
                 <div class="descriptions">
+                    <!-- Tabs for English and Arabic captions -->
                     <div class="tabs">
                         <button type="button" class="tab-btn active" data-lang="en">English</button>
                         <button type="button" class="tab-btn" data-lang="ar">Arabic</button>
                     </div>
                     
                     <div class="description-content">
+                        <!-- English description -->
                         <div class="desc-text active" data-lang="en">
                             {% if caption_en %}
                                 <p class="captiontxt">{{ caption_en }}</p>
@@ -51,6 +54,8 @@
                                 <p class="placeholder">English caption will appear here</p>
                             {% endif %}
                         </div>
+                        
+                        <!-- Arabic description -->
                         <div class="desc-text" data-lang="ar" dir="rtl">
                             {% if caption_ar %}
                                 <p class="captiontxt">{{ caption_ar }}</p>
