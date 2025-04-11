@@ -1,40 +1,47 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>توليد وصف الصورة</title>
+    <title>Image Caption Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>رفع صورة لتوليد الوصف</h1>
-    <form action="/generate_caption" method="POST" enctype="multipart/form-data">
-        <label for="image">اختر صورة:</label>
-        <input type="file" name="image" id="image" accept="image/*" required>
-        <button type="submit">رفع الصورة</button>
-    </form>
+    <div class="container">
+        <div class="chat-box">
+            <!-- عرض الوصف بالإنجليزية -->
+            {% if caption_en %}
+                <div class="message en">
+                    <p><strong>English Caption:</strong></p>
+                    <p>{{ caption_en }}</p>
+                </div>
+            {% endif %}
 
-    <h2>الوصف المولد:</h2>
-    <p id="caption"></p>
+            <!-- عرض الوصف بالعربية -->
+            {% if caption_ar %}
+                <div class="message ar">
+                    <p><strong>Arabic Caption:</strong></p>
+                    <p>{{ caption_ar }}</p>
+                </div>
+            {% endif %}
+        </div>
 
-    <script>
-        // الكود التالي سيعالج الرد من الخادم عند إرسال الصورة
-        const form = document.querySelector('form');
-        form.onsubmit = async (event) => {
-            event.preventDefault();
-            
-            const formData = new FormData(form);
-            const response = await fetch('/generate_caption', {
-                method: 'POST',
-                body: formData,
-            });
-            const result = await response.json();
-            
-            if (result.caption) {
-                document.getElementById('caption').innerText = result.caption;
-            } else {
-                document.getElementById('caption').innerText = "لم يتم توليد الوصف.";
-            }
-        };
-    </script>
+        <div class="form-container">
+            <h3>Upload an Image to Generate Captions</h3>
+            <form action="/generate_caption" method="POST" enctype="multipart/form-data">
+                <label for="image">Choose an image:</label>
+                <input type="file" name="image" id="image" required>
+                <button type="submit">Generate Caption</button>
+            </form>
+        </div>
+
+        <!-- عرض الصورة المرفوعة -->
+        {% if image_filename %}
+        <div class="uploaded-image">
+            <h4>Uploaded Image:</h4>
+            <img src="{{ url_for('uploaded_file', filename=image_filename) }}" alt="Uploaded Image" style="max-width: 100%; height: auto;">
+        </div>
+        {% endif %}
+    </div>
 </body>
 </html>
