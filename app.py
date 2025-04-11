@@ -6,13 +6,14 @@ from caption_generator import generate_captions
 app = Flask(__name__)
 app.secret_key = 'your-secret-key-here'
 
-# إعدادات التحميل
+# Replace with your own secret key for session management
+# and CSRF protection in production.
 UPLOAD_FOLDER = 'static/uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB
 
-# تأكد من وجود مجلد التحميلات
+# Create the upload folder if it doesn't exist
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 def allowed_file(filename):

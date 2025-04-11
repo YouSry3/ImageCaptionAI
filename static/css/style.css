@@ -204,3 +204,9 @@ main {
       height: 300px;
   }
 }
+p.captiontxt{
+  font-size: 4.0rem;
+  color: var(--gray);
+  margin-top: 0.5rem;
+  text-align: left;
+}
