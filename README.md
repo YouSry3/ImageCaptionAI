@@ -55,7 +55,7 @@ After running the application, open your browser and go to:
 http://127.0.0.1:5000/
 ```
 
-Now, you can use the project and enter text to check whether it is **Spam** or **Ham**! 🚀
+Now, you can use the project and enter Upload Your Image to check Running or Not ! 🚀
 
 ---
 
