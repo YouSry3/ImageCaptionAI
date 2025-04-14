@@ -20,13 +20,13 @@ After cloning the project, you need to install the required libraries and run th
 First, download the project from GitHub using the following command:
 
 ```bash
-git clone https://github.com/mohamedsherif301/NLP_Project.git
+git clone https://github.com/mohamedsherif301/ImageCaptionAI.git
 ```
 
 Then, navigate to the project directory:
 
 ```bash
-cd NLP_Project
+cd ImageCaptionAI
 ```
 
 ---
